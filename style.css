@@ -1,0 +1,554 @@
+/* style.css — Estilos Neoclassical Diesel-Arcana & Glassmorphism */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap');
+
+:root {
+  --bg-deep: hsl(216, 28%, 7%);
+  --bg-surface: rgba(18, 24, 38, 0.82);
+  --bg-surface-border: rgba(212, 175, 55, 0.28);
+  --brass-accent: hsl(45, 63%, 52%);
+  --brass-glow: rgba(212, 175, 55, 0.45);
+  --bronze-deep: #8b5a2b;
+  --resonance-cyan: #38ef7d;
+  --frequency-violet: #a855f7;
+  --frequency-blue: #38bdf8;
+  --anti-tone-crimson: #f43f5e;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --font-title: 'Cinzel', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  font-family: var(--font-body);
+}
+
+#app-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Lienzo WebGL / Three.js */
+#viewport-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Efecto de Viñeta y Desaturación en Zona Muda */
+#mute-waste-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.85);
+  transition: opacity 0.8s ease, filter 0.8s ease;
+}
+
+/* Overlay UI Superior: Telemetría y Estado de Región */
+#top-hud {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  right: 2rem;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--bg-surface-border);
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.brand-badge h1 {
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--brass-accent);
+  text-shadow: 0 0 12px var(--brass-glow);
+}
+
+.region-tag {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 0.8rem;
+}
+
+.resonance-currencies {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.currency-chip {
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-surface-border);
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.currency-chip .val {
+  color: var(--brass-accent);
+  font-weight: 600;
+}
+
+/* Modos de Navegación / Pestañas Superiores */
+.nav-modes {
+  pointer-events: auto;
+  display: flex;
+  gap: 0.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-surface-border);
+  border-radius: 999px;
+  padding: 0.3rem;
+}
+
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.mode-btn:hover {
+  color: var(--text-main);
+}
+
+.mode-btn.active {
+  background: var(--brass-accent);
+  color: #0b0f17;
+  box-shadow: 0 0 14px var(--brass-glow);
+}
+
+/* Panel Inferior: Estado de la Party & Medidor de Resonancia */
+#party-hud {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  pointer-events: auto;
+  max-width: 440px;
+}
+
+.party-card {
+  background: var(--bg-surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid var(--brass-accent);
+  border-radius: 10px;
+  padding: 0.8rem 1.2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.party-card.active-leader {
+  border-left-color: var(--frequency-violet);
+  background: rgba(25, 20, 42, 0.88);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+  transform: translateX(8px);
+}
+
+.party-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.party-name {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.party-role {
+  font-size: 0.75rem;
+  color: var(--brass-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.bar-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill-hp {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  transition: width 0.3s ease;
+}
+
+.bar-fill-tension {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #8b5cf6, #d946ef);
+  box-shadow: 0 0 8px rgba(217, 70, 239, 0.6);
+  transition: width 0.2s ease;
+}
+
+/* Indicador del Enemigo Actual (Objetivo) */
+#target-hud {
+  position: absolute;
+  top: 6rem;
+  right: 2rem;
+  z-index: 10;
+  background: var(--bg-surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-right: 4px solid var(--anti-tone-crimson);
+  border-radius: 10px;
+  padding: 0.9rem 1.4rem;
+  width: 320px;
+  pointer-events: none;
+}
+
+.target-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.target-name {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  color: var(--anti-tone-crimson);
+  font-weight: 700;
+}
+
+.target-type {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.target-freq-tags {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.freq-tag {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: #cbd5e1;
+}
+
+/* DIAL ARMÓNICO RADIAL (Harmonic Active Command Dial) */
+#hac-dial-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 480px;
+  height: 480px;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#hac-dial-container.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.dial-center-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.3) 0%, rgba(11, 15, 23, 0.92) 80%);
+  border: 2px solid var(--brass-accent);
+  box-shadow: 0 0 35px var(--brass-glow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dial-center-title {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  color: var(--brass-accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.dial-center-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.dial-action-node {
+  position: absolute;
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-surface-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+
+.dial-action-node:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+  border-color: var(--resonance-cyan);
+  box-shadow: 0 0 25px rgba(56, 239, 125, 0.45);
+}
+
+.dial-action-node .action-name {
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.dial-action-node .action-freq {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--resonance-cyan);
+  margin-top: 3px;
+}
+
+.dial-action-node .action-cost {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+/* Notificación Flotante de Acorde & Onda Estacionaria */
+#chord-banner {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  z-index: 40;
+  background: rgba(18, 24, 38, 0.94);
+  backdrop-filter: blur(16px);
+  border: 2px solid var(--resonance-cyan);
+  box-shadow: 0 0 40px rgba(56, 239, 125, 0.5);
+  border-radius: 999px;
+  padding: 0.8rem 2.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#chord-banner.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.chord-banner-title {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--resonance-cyan);
+  letter-spacing: 0.12em;
+}
+
+.chord-banner-desc {
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+/* Ventana Modal: Matriz de Oscilación (Node-Matrix) */
+#matrix-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 820px;
+  max-width: 90vw;
+  max-height: 85vh;
+  background: rgba(15, 20, 31, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--brass-accent);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px var(--brass-glow);
+  border-radius: 16px;
+  z-index: 100;
+  padding: 2rem;
+  display: none;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#matrix-modal.active {
+  display: flex;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
+}
+
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  color: var(--brass-accent);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.matrix-slot-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--bg-surface-border);
+  border-radius: 10px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.matrix-slot-card:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-style: solid;
+}
+
+.matrix-slot-card.equipped {
+  border-style: solid;
+  border-color: var(--resonance-cyan);
+  background: rgba(56, 239, 125, 0.06);
+}
+
+/* Panel de Controles / Atajos Flotante */
+#controls-hint {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10;
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 1.2rem;
+}
+
+.hint-key {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  font-family: var(--font-mono);
+  color: var(--brass-accent);
+  font-weight: 600;
+  margin-right: 4px;
+}

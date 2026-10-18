@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aetheria: Resonance of the Weave — JRPG Cinemático Original</title>
+  <meta name="description" content="Aetheria: Resonance of the Weave es un JRPG de fantasía tecno-mágica cinematográfica con combate táctico híbrido en tiempo real y propiedad intelectual blindada.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="app-container">
+    <!-- Viewport 3D Three.js -->
+    <div id="viewport-canvas"></div>
+
+    <!-- Filtro atmosférico de Zona Muda -->
+    <div id="mute-waste-vignette"></div>
+
+    <!-- HUD Superior: Telemetría y Recursos -->
+    <header id="top-hud">
+      <div class="brand-badge">
+        <h1 id="main-title">AETHERIA</h1>
+        <span class="region-tag" id="region-tag-name">Cúspide de Latón (Zona Muda Alfa)</span>
+      </div>
+
+      <nav class="nav-modes">
+        <button class="mode-btn active" id="btn-combat-mode">Combate HAC</button>
+        <button class="mode-btn" id="btn-tactical-toggle">Cadencia Táctica [Q]</button>
+        <button class="mode-btn" id="btn-matrix-toggle">Matriz [M]</button>
+        <button class="mode-btn" id="btn-purify">Afinar Bioma</button>
+      </nav>
+
+      <div class="resonance-currencies">
+        <div class="currency-chip" title="Talentos de Latón (Moneda comercial)">
+          <span>💰 Talentos:</span>
+          <span class="val" id="currency-brass">520</span>
+        </div>
+        <div class="currency-chip" title="Ecos Puros (Esencia de afinación)">
+          <span>✨ Ecos:</span>
+          <span class="val" id="currency-echoes">14</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Indicador de Objetivo Enemigo -->
+    <section id="target-hud" aria-label="Objetivo en combate">
+      <div class="target-header">
+        <span class="target-name">Discordante Resonador Alfa</span>
+        <span class="target-type">Anti-Tono Clase III</span>
+      </div>
+      <div class="stat-bars">
+        <div class="bar-wrapper">
+          <span>HP</span>
+          <div class="bar-track">
+            <div class="bar-fill-hp" id="enemy-hp-fill" style="width: 78%; background: linear-gradient(90deg, #f43f5e, #fb7185);"></div>
+          </div>
+          <span id="enemy-hp-val">14200 / 18000</span>
+        </div>
+        <div class="bar-wrapper">
+          <span>DESESTAB.</span>
+          <div class="bar-track">
+            <div class="bar-fill-tension" id="enemy-stagger-fill" style="width: 45%; background: linear-gradient(90deg, #eab308, #f59e0b);"></div>
+          </div>
+        </div>
+      </div>
+      <div class="target-freq-tags">
+        <span class="freq-tag">Frecuencia: Inestabilidad Cero</span>
+        <span class="freq-tag">Vulnerabilidad: Armónica Aguda</span>
+      </div>
+    </section>
+
+    <!-- Banner Flotante de Acorde y Onda Estacionaria -->
+    <div id="chord-banner" role="alert">
+      <span class="chord-banner-title" id="chord-banner-title">ONDA ESTACIONARIA</span>
+      <span class="chord-banner-desc" id="chord-banner-desc">Sinergia tonal detonada (+220% Daño)</span>
+    </div>
+
+    <!-- DIAL ARMÓNICO RADIAL (Harmonic Active Command Dial) -->
+    <div id="hac-dial-container" aria-label="Dial Armónico de Comandos Tácticos">
+      <div class="dial-center-ring" id="dial-center-btn" title="Cerrar Cadencia Táctica">
+        <span class="dial-center-title">HAC LENS</span>
+        <span class="dial-center-sub">TIEMPO LENTO [Q]</span>
+      </div>
+      <div id="dial-nodes-layer">
+        <!-- Nodos de habilidades inyectados dinámicamente -->
+      </div>
+    </div>
+
+    <!-- Panel Inferior Izquierdo: Party HUD -->
+    <aside id="party-hud" aria-label="Estado del Grupo"></aside>
+
+    <!-- Panel Inferior Derecho: Atajos y Guía Rápida -->
+    <footer id="controls-hint">
+      <div><span class="hint-key">ESPACIO</span> Ataque Básico</div>
+      <div><span class="hint-key">Q / SHIFT</span> Cadencia Táctica (Dial)</div>
+      <div><span class="hint-key">E</span> Cambiar Líder</div>
+      <div><span class="hint-key">M</span> Matriz de Oscilación</div>
+    </footer>
+
+    <!-- Ventana Modal: Matriz de Oscilación (Node-Matrix) -->
+    <div id="matrix-modal" role="dialog" aria-modal="true" aria-labelledby="matrix-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="matrix-title">Matriz de Oscilación — Resonadores de Tono</h2>
+        <button class="modal-close-btn" id="matrix-close-btn" aria-label="Cerrar modal">✕</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+        Conecta <strong>Vectores de Tono</strong> en las ranuras helicoidales. Las combinaciones de la misma familia tímbrica adyacente despiertan resonancias pasivas para todo el grupo sin clases fijas.
+      </p>
+      <div class="matrix-grid" id="matrix-grid-slots"></div>
+    </div>
+  </div>
+
+  <!-- Script Principal con Módulos ES6 -->
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
